@@ -1,0 +1,101 @@
+html {
+    font-family: Verdana,sans-serif;
+}
+
+.header {
+    padding: 1px;
+    text-align: left;
+    padding-left: 50px;
+    background: #2196F3;
+    color: white;
+    font-size: 25px;
+    margin-bottom: 30px;
+}
+
+body {
+    background-image: url("../images/car1.webp");
+    background-repeat: repeat;
+}
+
+svg {
+    background-color: whitesmoke;
+    border: 5px solid bisque;
+}
+
+.svg {
+    text-align: center;
+}
+
+.back-forward-buttons {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    will-change: box-shadow, transform;
+    background: radial-gradient(100% 100% at 100% 0%, #89E5FF 0%, #5468FF 100%);
+    box-shadow: 0px 2px 4px rgb(45 35 66 / 40%), 0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px rgb(58 65 111 / 50%);
+    padding: 0 32px;
+    border-radius: 6px;
+    color: #fff;
+    height: 48px;
+    font-size: 18px;
+    text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.back-forward-buttons:hover {
+    box-shadow: 0px 4px 8px rgb(45 35 66 / 40%), 0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #3c4fe0;
+    transform: translateY(-2px);
+}
+
+.back-forward-buttons:active {
+    box-shadow: inset 0px 3px 7px #3c4fe0;
+    transform: translateY(2px);
+}
+
+.control-buttons {
+    text-align: center;
+    padding-top: 1em;
+}
+
+.restart-button {
+    width: 400px;
+    height: 3em;
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: rgba(220, 0, 0, 1);
+    background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+
+.restart-button:hover {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+.restart-button:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6), inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+    transform: translateY(2px);
+}
+
+.card {
+    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2), 0 4px 20px 0 rgba(0,0,0,0.19);
+    margin: 10px;
+}
+
+.container {
+    padding: 0.01em 16px;
+    background: whitesmoke;
+}
+
+.blue {
+    color: #fff!important;
+    background-color: #2196F3!important;
+}

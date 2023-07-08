@@ -1,33 +1,66 @@
 <html>
-<script src='https://d3js.org/d3.v5.min.js'></script>
-<style>
-    circle {
-        fill: lightblue;
-        stroke: black;
-    }
-</style>
+<script src="./js/d3.v7.min.js"></script>
+<script src="./js/d3-annotation.min.js"></script>
+
+<head>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<div class="header">
+    <h2>Weight vs MPG</h2>
+    <p>American, European, and Japanese cars 1970s to 1982</p>
+</div>
+
+<div>
+
+
+</div>
 
 <body onload='init()'>
-    <svg width=300 height=300>
-    </svg>
+    <div class="card">
+        <header class="container blue">
+            <h2 id="nation">American</h2>
+        </header>
+
+        <div id="blurb" class="container">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat.</p>
+        </div>
+    </div>
+    <div class="svg">
+        <svg width=800 height=500>
+        </svg>
+    </div>
+    <div class="control-buttons">
+        <button type="button" class="back-forward-buttons">Back</button>
+        <button type="button" class="restart-button">Restart</button>
+        <button type="button" class="back-forward-buttons">Next</button>
+    </div>
+
     <script>
         async function init() {
-            data = d3.csv("https://flunky.github.io/cars2017.csv").then(function (data) {
-                avg_mpg = data.map(car => ({
-                    city_mpg: Number(car.AverageCityMPG),
-                    highway_mpg: Number(car.AverageHighwayMPG),
-                    cylinders: car.EngineCylinders,
-                }));
+            d3.csv("https://gonzg0.github.io/416-DataViz-Project2/Automobile.csv").then(function (data) {
+                const car = car => ({ name: car.name, mpg: Number(car.mpg), weight: Number(car.weight), year: Number(19 + car.model_year) });
 
-                TWO_HUNDRED = 200
+                usa_vehicles = data.filter(car => car.origin === 'usa').map(car);
+                japanese_vehicles = data.filter(car => car.origin === 'japan').map(car);
+                europe_vehicles = data.filter(car => car.origin === 'europe').map(car);
+
+
+                WIDTH = 500
+                HEIGHT = 400
                 FIFTY = 50
                 margin = 50
                 var x = d3.scaleLog().base(10).domain([10, 150]).range([0, 200]);
                 var y = d3.scaleLog().base(10).domain([10, 150]).range([200, 0]);
 
                 d3.select("svg")
-                    .attr("width", TWO_HUNDRED + 2 * FIFTY)
-                    .attr("height", TWO_HUNDRED + 2 * FIFTY)
+                    .attr("width", WIDTH + 2 * FIFTY)
+                    .attr("height", HEIGHT + 2 * FIFTY)
                     .append("g")
                     .attr("transform", "translate(" + margin + "," + margin + ")")
                     .selectAll("circle")
@@ -50,5 +83,33 @@
         }
     </script>
 </body>
+
+<div class="card">
+    <header class="container blue">
+        <h2>Image sources</h2>
+    </header>
+
+    <div class="container">
+        <ul>
+            <li>
+                <a href="https://www.hemmings.com/stories/2020/06/09/the-10-best-performance-cars-of-the-1980s">Ten best
+                    performance
+                    cars of the 80s</a>
+            </li>
+            <li>
+                <a href="https://gearjunkie.com/camper-rv/1988-mitsubishi-delica-van-life-build">Mitsubishi Delica</a>
+            </li>
+            <li>
+                <a href="https://www.motor1.com/news/61708/soviet-cars-were-weird-volga-gaz-24/">Volga Gaz</a>
+            </li>
+            <li>
+                <a href="https://www.classicandsportscar.com/gallery/europes-best-barges-part-3-1970s">Europe Car</a>
+            </li>
+            <li>
+                <a href="https://coolbackgrounds.io/">Cool background</a>
+            </li>
+        </ul>
+    </div>
+</div>
 
 </html>
