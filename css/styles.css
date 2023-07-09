@@ -108,3 +108,11 @@ svg {
     stroke: #e8336d;
     fill: #e8336d;
 }
+
+#tools {
+    display: none;
+}
+
+.container.tools {
+    padding-bottom: 6px;
+}

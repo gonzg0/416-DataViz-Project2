@@ -7,24 +7,43 @@ HEIGHT = 500
 FIFTY = 50
 margin = 50
 
+function searchYears(year1, year2) {
+
+}
+
+function searchName(vehicleName) {
+
+}
+
+function updateSelfExplore(type) {
+    if(type == 'year'){
+
+    }else if(type == 'name'){
+        
+    }
+}
+
 function generateNationBlurb(index) {
     var nationText;
     var blurb;
     if (index === 0) {
         nationText = 'USA Vehicles';
         blurb = "<p>American cars during the era of 1970 to 1982 tended to have higher fuel consumption. Displayed as lower miles per gallon.</p>" +
-        "<p>They also tended to weigh a lot more than their counterparts in europe and japan. We also note a clear tend of less weight relating to higher miles per gallon, but we also see some road tanks with abysmal fuel efficiency of 9 MPG.</p>" +
-        "<p>Also of important note is the disel vehicle displaying better fuel efficiency than its simiarly weighted gasoline counterparts. One downside of the diesel efficiency is emissions, which are higher than gasoline vehicles.</p>";
+            "<p>They also tended to weigh a lot more than their counterparts in europe and japan. We also note a clear tend of less weight relating to higher miles per gallon, but we also see some road tanks with abysmal fuel efficiency of 9 MPG.</p>" +
+            "<p>Also of important note is the disel vehicle displaying better fuel efficiency than its simiarly weighted gasoline counterparts. One downside of the diesel efficiency is emissions, which are higher than gasoline vehicles.</p>";
     } else if (index === 1) {
         nationText = 'Europe Vehicles';
         blurb = "<p>European cars of the era seem to have more diesel vehicles available.</p>" +
-        "<p>They also tended to weigh less than their counterparts in europe and japan. Overall, they have a broader spread of fuel efficiency when compared to American vehicles.</p>" +
-        "<p>We notice that the European vehicles tend to have more base fuel efficiency and higher top fuel efficiency. Overall across multiple weight categories diesels outperform gasoline vehicles.</p>";
+            "<p>They also tended to weigh less than their counterparts in europe and japan. Overall, they have a broader spread of fuel efficiency when compared to American vehicles.</p>" +
+            "<p>We notice that the European vehicles tend to have more base fuel efficiency and higher top fuel efficiency. Overall across multiple weight categories diesels outperform gasoline vehicles.</p>";
     } else if (index === 2) {
         nationText = 'Japanese Vehicles';
         blurb = "<p>Japanese cars of the era seem to be more fuel efficient when compared against European and American cars. With the majority clustered aronud the 30MPG mark.</p>" +
-        "<p>They also tended to weigh less than their counterparts in Europe and America. The heaviest Japanese car of the era was 2930 LBS. A low weight for an American vehicle and an average weight for a European car.</p>" +
-        "<p>We notice that the Japanese vehicles tend to have similar fuel efficiency ranges like the European cars. Unfortunately I was unable to determine efficiently if the Japanese vehicles were diesel powered.</p>";
+            "<p>They also tended to weigh less than their counterparts in Europe and America. The heaviest Japanese car of the era was 2930 LBS. A low weight for an American vehicle and an average weight for a European car.</p>" +
+            "<p>We notice that the Japanese vehicles tend to have similar fuel efficiency ranges like the European cars. Unfortunately I was unable to determine efficiently if the Japanese vehicles were diesel powered.</p>";
+    }else if (index === 3) {
+        nationText = 'Full explore';
+        blurb = "<p>Welcome to the full explore! Explore the data to your heart's content!</p><p>Red American, Blue European, Green Japanese</p><p>Filter using the year selectors and search with the searchbox</p>";
     }
 
     document.getElementById('nation').textContent = nationText;
@@ -262,16 +281,25 @@ function updateDisplay(direction) {
         displaying = 0;
     }
 
-    if (displaying > 2) {
-        displaying = 2;
+    if (displaying > 3) {
+        displaying = 3;
     } else if (displaying < 0) {
         displaying = 0;
     }
 
     updateBackground(displaying);
     display = [usa_vehicles, europe_vehicles, japanese_vehicles];
-    generateSVG(display[displaying], color);
-    generateAnnotation(displaying);
+
+    if (displaying === 3) {
+        document.getElementById('tools').style.display = 'block';
+        const full_vehicles = usa_vehicles.concat(europe_vehicles).concat(japanese_vehicles);
+        generateSVG(full_vehicles);
+    } else {
+        document.getElementById('tools').style.display = 'none';
+        generateSVG(display[displaying], color);
+        generateAnnotation(displaying);
+    }
+
     generateNationBlurb(displaying);
     console.log("this code was built by Gerardo Gonzalez Moctezuma");
 }
@@ -298,6 +326,14 @@ async function init() {
 
         document.querySelector("#btn_restart").addEventListener("click", (event) => {
             updateDisplay("reset");
+        });
+
+        document.querySelector("#btn_year").addEventListener("click", (event) => {
+            updateSelfExplore('year');
+        });
+
+        document.querySelector("#btn_name").addEventListener("click", (event) => {
+            updateSelfExplore('name');
         });
     });
 }
