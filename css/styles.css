@@ -99,3 +99,12 @@ svg {
     color: #fff!important;
     background-color: #2196F3!important;
 }
+
+.annotation-note, .annotation-subject, .annotation-connector, .annotation-note-label, .annotation-note-title, .connector {
+    fill: #e8336d;
+}
+
+.annotation path {
+    stroke: #e8336d;
+    fill: #e8336d;
+}

@@ -1,6 +1,7 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-<script src="./js/d3-annotation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js" integrity="sha512-iBAeBWWWFb8HqSBcrqcz98iIpuVH1la39dEYHtyQ/pGpeCQTQVvLJOWAuhv2Q7JSHp9k7hWA7sGxU3hHJe+tFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- <script src="./js/d3-annotation.min.js"></script> -->
 <script src="./js/core.js"></script>
 
 <head>
@@ -12,19 +13,16 @@
     <p>American, European, and Japanese cars 1970s to 1982</p>
 </div>
 
-<body onload='init()'>
+<body id="body" onload='init()'>
     <div class="card">
         <header class="container blue">
-            <h2 id="nation">American</h2>
+            <h2 id="nation">American Vehicles</h2>
         </header>
 
         <div id="blurb" class="container">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat.</p>
+            <p>American cars during the era of 1970 to 1982 tended to have higher fuel consumption. Displayed as lower miles per gallon.</p>
+            <p>They also tended to weigh a lot more than their counterparts in europe and japan. We also note a clear tend of less weight relating to higher miles per gallon, but we also see some road tanks with abysmal fuel efficiency of 9 MPG.</p>
+            <p>Also of important note is the disel vehicle displaying better fuel efficiency than its simiarly weighted gasoline counterparts. One downside of the diesel efficiency is emissions, which are higher than gasoline vehicles.</p>
         </div>
     </div>
     <div id="svg_container" class="svg">
@@ -65,24 +63,4 @@
         </ul>
     </div>
 </div>
-
 </html>
-<script>
-    document.onload = function () {
-        // Array of Images
-        var backgroundImg = [
-            "./images/car1.webp",
-            "./images/europe-car.jpg",
-            "./images/mitsubushi-delica.jpg",
-            "./images/soviet-carvolga-gaz-241.jpg"
-        ]
-
-        setInterval(changeImage, 5000);
-        function changeImage() {
-            var i = Math.floor((Math.random() * 3));
-
-            document.html.style.backgroundImage = "url('" + backgroundImg[i] + "')";
-
-        }
-    }
-</script>

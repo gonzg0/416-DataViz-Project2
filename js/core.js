@@ -7,6 +7,51 @@ HEIGHT = 500
 FIFTY = 50
 margin = 50
 
+function generateNationBlurb(index) {
+    var nationText;
+    var blurb;
+    if (index === 0) {
+        nationText = 'USA Vehicles';
+        blurb = "<p>American cars during the era of 1970 to 1982 tended to have higher fuel consumption. Displayed as lower miles per gallon.</p>" +
+        "<p>They also tended to weigh a lot more than their counterparts in europe and japan. We also note a clear tend of less weight relating to higher miles per gallon, but we also see some road tanks with abysmal fuel efficiency of 9 MPG.</p>" +
+        "<p>Also of important note is the disel vehicle displaying better fuel efficiency than its simiarly weighted gasoline counterparts. One downside of the diesel efficiency is emissions, which are higher than gasoline vehicles.</p>";
+    } else if (index === 1) {
+        nationText = 'Europe Vehicles';
+        blurb = "<p>European cars of the era seem to have more diesel vehicles available.</p>" +
+        "<p>They also tended to weigh less than their counterparts in europe and japan. Overall, they have a broader spread of fuel efficiency when compared to American vehicles.</p>" +
+        "<p>We notice that the European vehicles tend to have more base fuel efficiency and higher top fuel efficiency. Overall across multiple weight categories diesels outperform gasoline vehicles.</p>";
+    } else if (index === 2) {
+        nationText = 'Japanese Vehicles';
+        blurb = "<p>Japanese cars of the era seem to be more fuel efficient when compared against European and American cars. With the majority clustered aronud the 30MPG mark.</p>" +
+        "<p>They also tended to weigh less than their counterparts in Europe and America. The heaviest Japanese car of the era was 2930 LBS. A low weight for an American vehicle and an average weight for a European car.</p>" +
+        "<p>We notice that the Japanese vehicles tend to have similar fuel efficiency ranges like the European cars. Unfortunately I was unable to determine efficiently if the Japanese vehicles were diesel powered.</p>";
+    }
+
+    document.getElementById('nation').textContent = nationText;
+    document.getElementById('blurb').innerHTML = blurb;
+}
+
+function updateBackground(index) {
+    var backgroundImg = [
+        "./images/car1.webp",
+        "./images/europe-car.jpg",
+        "./images/mitsubushi-delica.jpg",
+        "./images/soviet-carvolga-gaz-241.jpg"
+    ];
+
+    document.getElementById('body').style.backgroundImage = "url('" + backgroundImg[index] + "')";
+}
+
+function circle_color(origin) {
+    if (origin === 'usa') {
+        return 'blue';
+    } else if (origin === 'europe') {
+        return 'red';
+    } else if (origin === 'japan') {
+        return 'green';
+    }
+}
+
 function generate_vehicle_tooltip(car) {
     return car.name + " " + car.year + "<br>MPG: " + car.mpg + "<br>Acceleration: " + car.acceleration + "<br>" + car.weight + " lbs";
 }
@@ -30,33 +75,127 @@ function mpg_weight_ranges(cars) {
     }
 }
 
-function generateSVG(vehicles) {
+function generateAnnotation(annotation_number) {
+    const type = d3.annotationCalloutCircle
+    const usa_annotation = {
+        note: {
+            label: "Oldsmobile cutlass ciera 1982 38 mpg 3015 lbs",
+            title: "Diesel Vehicle"
+        },
+        dy: -150,
+        dx: -10,
+        x: 530,
+        y: 365,
+        subject: {
+            radius: 30,
+            radiusPadding: 5
+        }
+    }
+
+    let annotations = []
+    if (annotation_number === 0) {
+        annotations.push(usa_annotation);
+    } if (annotation_number === 1) {
+        annotations = [
+            {
+                note: {
+                    label: "mercedes-benz 300D 1979 25.4 MPG 3530 lbs",
+                    title: "Diesel Vehicle"
+                },
+                dy: -30,
+                dx: -20,
+                x: 210,
+                y: 125,
+                subject: {
+                    radius: 25,
+                    radiusPadding: 3
+                }
+            },
+            {
+                note: {
+                    label: "Multiple diesel vehicles exhibit the same trend.",
+                    title: "Diesel Vehicles"
+                },
+                dy: -50,
+                dx: 0,
+                x: 295,
+                y: 200,
+                subject: {
+                    radius: 35,
+                    radiusPadding: 3
+                }
+            },
+            {
+                note: {
+                    label: "audi 5000s 1980 36.4 mpg 2950 lbs",
+                    title: "Diesel Vehicle"
+                },
+                dy: -50,
+                dx: 10,
+                x: 410,
+                y: 270,
+                subject: {
+                    radius: 30,
+                    radiusPadding: 5
+                }
+            }
+            ,
+            {
+                note: {
+                    label: "VW dasher 1980 43.4 mpg 2335 lbs",
+                    title: "Diesel Vehicle"
+                },
+                dy: -50,
+                dx: -10,
+                x: 535,
+                y: 420,
+                subject: {
+                    radius: 30,
+                    radiusPadding: 5
+                }
+            }
+        ]
+    }
+
+    const makeAnnotations = d3.annotation()
+        .editMode(false)
+        .notePadding(5)
+        .type(type)
+        .annotations(annotations)
+
+    d3.select("svg")
+        .append("g")
+        .attr("class", "annotation-group")
+        .call(makeAnnotations)
+}
+
+function generateSVG(vehicles, color) {
     var tooltip = d3.select("#svg_container")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "10px")
-    .style("position", "absolute");
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
+        .style("position", "absolute");
 
 
     var mouseover = function (d) {
         tooltip
             .style("opacity", 1)
     }
-    
+
     var mousemove = function (d) {
         tooltip
             .html(generate_vehicle_tooltip(d))
             .style("left", (d3.event.pageX + 16) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", (d3.event.pageY + 16) + "px")
     }
-    
+
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-    var mouseleave = function (d) {
+    var mouseleave = function () {
         tooltip
             .transition()
             .duration(200)
@@ -79,14 +218,14 @@ function generateSVG(vehicles) {
         .attr("cx", function (d, i) { return mpg(d.mpg); })
         .attr("r", function (d, i) { return Number(d.acceleration); })
         .attr("id", function (d, i) { return "usa_vehicle" + i; })
-        .attr("fill", "blue")
+        .attr("fill", function (d, i) { return circle_color(d.origin) })
         .attr("stroke", "red")
         .attr("border", "6px solid blue")
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave);
 
-        d3.select("svg")
+    d3.select("svg")
         .append("g")
         .attr("transform", "translate(" + 50 + "," + 50 + ")")
         .call(d3.axisLeft(weight).tickFormat(d3.format('~s')));
@@ -113,28 +252,42 @@ function generateSVG(vehicles) {
 }
 
 function updateDisplay(direction) {
+    color = "orange";
     d3.selectAll("svg > *").remove();
-    if(direction === "forward"){
+    if (direction === "forward") {
         displaying++;
-    }else if(direction === "backward") {
+    } else if (direction === "backward") {
         displaying--;
-    }else {
+    } else {
         displaying = 0;
     }
 
+    if (displaying > 2) {
+        displaying = 2;
+    } else if (displaying < 0) {
+        displaying = 0;
+    }
+
+    updateBackground(displaying);
     display = [usa_vehicles, europe_vehicles, japanese_vehicles];
-    generateSVG(display[displaying]);
+    generateSVG(display[displaying], color);
+    generateAnnotation(displaying);
+    generateNationBlurb(displaying);
+    console.log("this code was built by Gerardo Gonzalez Moctezuma");
 }
 
 async function init() {
     d3.csv("https://gonzg0.github.io/416-DataViz-Project2/Automobile.csv").then(function (data) {
-        const car = car => ({ acceleration: car.acceleration, name: car.name, mpg: Number(car.mpg), weight: Number(car.weight), year: Number(19 + car.model_year) });
+        const car = car => ({ origin: car.origin, acceleration: car.acceleration, name: car.name, mpg: Number(car.mpg), weight: Number(car.weight), year: Number(19 + car.model_year) });
 
         this.usa_vehicles = data.filter(car => car.origin === 'usa').map(car);
         this.japanese_vehicles = data.filter(car => car.origin === 'japan').map(car);
         this.europe_vehicles = data.filter(car => car.origin === 'europe').map(car);
 
-        generateSVG(usa_vehicles);
+        generateSVG(usa_vehicles, "blue");
+        generateAnnotation(0);
+        generateNationBlurb(0)
+
         document.querySelector("#btn_forward").addEventListener("click", (event) => {
             updateDisplay("forward");
         });
@@ -143,7 +296,7 @@ async function init() {
             updateDisplay("backward");
         });
 
-        document.querySelector("#btn_reset").addEventListener("click", (event) => {
+        document.querySelector("#btn_restart").addEventListener("click", (event) => {
             updateDisplay("reset");
         });
     });
