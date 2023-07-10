@@ -1,25 +1,79 @@
 usa_vehicles = [];
 japanese_vehicles = [];
 europe_vehicles = [];
+full_vehicles = [];
 displaying = 0;
 WIDTH = 500
 HEIGHT = 500
 FIFTY = 50
 margin = 50
 
-function searchYears(year1, year2) {
+function year_filter() {
+    const year_1 = Number(document.getElementById('start_year').value);
+    const year_2 = Number(document.getElementById('end_year').value);
 
+    let greaterThanYear1 = full_vehicles.filter(car => car.year >= year_1);
+    return greaterThanYear2 = greaterThanYear1.filter(car => car.year <= year_2);
 }
 
-function searchName(vehicleName) {
+function name_search(previous_filtration) {
+    const value = document.getElementById('name_search').value;
+    if (previous_filtration) {
+        return previous_filtration.filter(car => car.name.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+    } else {
+        return full_vehicles.filter(car => car.name.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+    }
+}
 
+function filtration(filtrations) {
+    let temp_filtration = null;
+    let filtration_result = null;
+
+    if (filtrations.length === 1) {
+        if (filtrations[0] === 'year') {
+            filtration_result = year_filter();
+        }
+        else if (filtrations[0] === 'name') {
+            filtration_result = name_search();
+        }
+    } else {
+        filtrations.forEach(filtration_type => {
+            if (filtration_type === 'year') {
+                temp_filtration = year_filter();
+            } else if (filtration_type === 'name') {
+                filtration_result = name_search(temp_filtration);
+            }
+        });
+    }
+
+    d3.selectAll("svg > *").remove();
+    generateSVG(filtration_result);
+}
+
+function clearInput(ids) {
+    ids.forEach(id => {
+        document.getElementById(id).value = '';
+    });
 }
 
 function updateSelfExplore(type) {
-    if(type == 'year'){
+    let filtration_types = [];
 
-    }else if(type == 'name'){
-        
+    if (document.getElementById('start_year').value && document.getElementById('end_year').value) {
+        filtration_types.push('year');
+    }
+    if (document.getElementById('name_search').value) {
+        filtration_types.push('name');
+    }
+
+    if (type === 'filtration') {
+        filtration(filtration_types);
+    }
+
+    if (type == 'reset') {
+        d3.selectAll("svg > *").remove();
+        generateSVG(full_vehicles);
+        clearInput(['name_search', 'start_year', 'end_year']);
     }
 }
 
@@ -41,9 +95,9 @@ function generateNationBlurb(index) {
         blurb = "<p>Japanese cars of the era seem to be more fuel efficient when compared against European and American cars. With the majority clustered aronud the 30MPG mark.</p>" +
             "<p>They also tended to weigh less than their counterparts in Europe and America. The heaviest Japanese car of the era was 2930 LBS. A low weight for an American vehicle and an average weight for a European car.</p>" +
             "<p>We notice that the Japanese vehicles tend to have similar fuel efficiency ranges like the European cars. Unfortunately I was unable to determine efficiently if the Japanese vehicles were diesel powered.</p>";
-    }else if (index === 3) {
+    } else if (index === 3) {
         nationText = 'Full explore';
-        blurb = "<p>Welcome to the full explore! Explore the data to your heart's content!</p><p>Red American, Blue European, Green Japanese</p><p>Filter using the year selectors and search with the searchbox</p>";
+        blurb = "<p>Welcome to the full explore! Explore the data to your heart's content!</p><p>Red American, Blue European, Green Japanese</p><p>Filter using the year selectors or search names with the searchbox.</p>";
     }
 
     document.getElementById('nation').textContent = nationText;
@@ -188,7 +242,7 @@ function generateAnnotation(annotation_number) {
         .call(makeAnnotations)
 }
 
-function generateSVG(vehicles, color) {
+function generateSVG(vehicles) {
     var tooltip = d3.select("#svg_container")
         .append("div")
         .style("opacity", 0)
@@ -271,7 +325,6 @@ function generateSVG(vehicles, color) {
 }
 
 function updateDisplay(direction) {
-    color = "orange";
     d3.selectAll("svg > *").remove();
     if (direction === "forward") {
         displaying++;
@@ -292,11 +345,12 @@ function updateDisplay(direction) {
 
     if (displaying === 3) {
         document.getElementById('tools').style.display = 'block';
-        const full_vehicles = usa_vehicles.concat(europe_vehicles).concat(japanese_vehicles);
+        document.getElementById('btn_forward').style.display = 'none';
         generateSVG(full_vehicles);
     } else {
         document.getElementById('tools').style.display = 'none';
-        generateSVG(display[displaying], color);
+        document.getElementById('btn_forward').style.display = 'inline-block';
+        generateSVG(display[displaying]);
         generateAnnotation(displaying);
     }
 
@@ -311,8 +365,9 @@ async function init() {
         this.usa_vehicles = data.filter(car => car.origin === 'usa').map(car);
         this.japanese_vehicles = data.filter(car => car.origin === 'japan').map(car);
         this.europe_vehicles = data.filter(car => car.origin === 'europe').map(car);
+        full_vehicles = usa_vehicles.concat(europe_vehicles).concat(japanese_vehicles);
 
-        generateSVG(usa_vehicles, "blue");
+        generateSVG(usa_vehicles);
         generateAnnotation(0);
         generateNationBlurb(0)
 
@@ -325,15 +380,19 @@ async function init() {
         });
 
         document.querySelector("#btn_restart").addEventListener("click", (event) => {
-            updateDisplay("reset");
+            if (displaying === 3) {
+                updateSelfExplore('reset');
+            } else {
+                updateDisplay("reset");
+            }
         });
 
         document.querySelector("#btn_year").addEventListener("click", (event) => {
-            updateSelfExplore('year');
+            updateSelfExplore('filtration');
         });
 
         document.querySelector("#btn_name").addEventListener("click", (event) => {
-            updateSelfExplore('name');
+            updateSelfExplore('filtration');
         });
     });
 }
